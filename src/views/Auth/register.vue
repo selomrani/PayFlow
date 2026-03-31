@@ -1,18 +1,25 @@
 <script setup>
 import axios from 'axios'
 import { ref } from 'vue'
+const client = axios.create({
+  baseURL: 'http://localhost',
+  withCredentials: true,
+})
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const response = ref('')
 async function register() {
   try {
-    response.value = await axios.post('http://localhost/api/register', {
+    response.value = await client.post('/api/register', {
       name: name.value,
       email: email.value,
       password: password.value,
     })
     console.log('Registration successful:', response.value.data)
+    if (response.value.status == 'success') {
+      nextTick({ name: 'login' })
+    }
   } catch (error) {
     console.error('Registration error:', error)
   }
